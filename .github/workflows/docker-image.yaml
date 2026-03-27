@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  workflow_call:
+    inputs:
+      jena-version:
+        description: "Tag for the Docker image"
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build the Docker image
+        run: docker build . \
+          --file Dockerfile \
+          --build-arg JENA_VERSION=${{ inputs.jena-version }} \
+          --tag ${{ secrets.DOCKER_USERNAME }}/jena-fuseki-docker:${{ inputs.jena-version }}
+
+      - name: Push the Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/jena-fuseki-docker:${{ inputs.jena-version }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
