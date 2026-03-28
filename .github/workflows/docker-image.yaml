@@ -22,12 +22,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Build the Docker image
-        run: |
-          docker build . \
-            --build-arg JENA_VERSION=${{ inputs.jena-version }} \
-            --tag ${{ secrets.DOCKER_USERNAME }}/jena-fuseki-docker:${{ inputs.jena-version }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: docker.io/psiwon/jena-fuseki-docker
+          tags: |
+            type=raw,value=${{ inputs.jena-version }}
 
-      - name: Push the Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/jena-fuseki-docker:${{ inputs.jena-version }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
