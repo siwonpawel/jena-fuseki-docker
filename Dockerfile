@@ -19,7 +19,7 @@
 
 ARG JAVA_VERSION=21
 
-ARG ALPINE_VERSION=3.21.2
+ARG ALPINE_VERSION=latest
 ARG JENA_VERSION=""
 
 # Internal, passed between stages.
@@ -63,11 +63,11 @@ RUN ./download.sh --chksum sha1 "$JAR_URL"
 
 ARG JDEPS_EXTRA="jdk.crypto.cryptoki,jdk.crypto.ec,jdk.zipfs,jdk.localedata"
 RUN \
-  JDEPS="$(jdeps --multi-release base --print-module-deps --ignore-missing-deps ${FUSEKI_JAR})"  && \
-  jlink \
-        --compress zip-6 --strip-debug --no-header-files --no-man-pages \
-        --output "${JAVA_MINIMAL}" \
-        --add-modules "${JDEPS},${JDEPS_EXTRA}"
+    JDEPS="$(jdeps --multi-release base --print-module-deps --ignore-missing-deps ${FUSEKI_JAR})"  && \
+    jlink \
+    --compress zip-6 --strip-debug --no-header-files --no-man-pages \
+    --output "${JAVA_MINIMAL}" \
+    --add-modules "${JDEPS},${JDEPS_EXTRA}"
 
 ADD entrypoint.sh .
 ADD log4j2.properties .
