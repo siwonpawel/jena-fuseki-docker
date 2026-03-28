@@ -3,3 +3,12 @@ Copyright 2011-2026 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
+
+## Derived work information
+
+This repository contains modified files derived from the Apache Jena source
+tree, specifically jena-fuseki2/jena-fuseki-docker at commit
+f8ab05095fe532460b77e7d355fc27934eee9edd.
+
+Those files were modified to support the build, packaging, and Docker Hub
+publishing workflow used for the psiwon/jena-fuseki-docker image.
