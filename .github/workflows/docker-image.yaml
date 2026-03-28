@@ -40,5 +40,7 @@ jobs:
           push: true
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
+          build-args: |  
+            JENA_VERSION=${{ inputs.jena-version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
